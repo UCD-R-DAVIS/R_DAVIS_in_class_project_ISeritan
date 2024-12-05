@@ -10,6 +10,7 @@ x
 #part 1----
 for(i in unique(surveys$taxa)){
   taxon_names <- surveys[surveys$taxa == i, ]
+  #notes from class when we reviewed the homework: the above could also be written taxon_names <- surveys %>% filter(taxa==i). and another way to head into the next line of code, rather than saying taxon_names$species, would be to define species_names <- unique(taxon_names$species) and then put species_names into the below parentheses. these are just dif ways to get the same result
   longest_names <- taxon_names[nchar(taxon_names$species)==
                                  max(nchar(taxon_names$species)),] %>% 
     select(species)
@@ -46,6 +47,7 @@ mloa %>%
     temp_F_10m = temp_C_10m,
     temp_F_towertop = temp_C_towertop)
 #tada! this selected the three C columns, applied my new C_to_F function to convert the temp, then renamed the columns to be F instead of C. 
+#notes from class when we reviewed the homework: if we weren't using map_df, could have also done this by mutate(temp_F_2m = C_to_F(temp_C_2m), (temp_F_10m = so on and so forth)), OR by saying mloa$temp_F_2m <- C_to_F(mloa$temp_C_2m) and calling the new column into existence with $. also i forgot that i needed to bind these new cols to the old df - should have ended with bind_cols(mloa)
 
 #challenge----
 #Use lapply to create a new column of the surveys dataframe that includes the genus and species name together as one string.
@@ -55,6 +57,11 @@ latin_name <- function(sp){
          function(i) paste0(sp[i,"genus"], " ", sp[i, "species"]))
 }
 #created a new function called latin_name that pulls each sequential row out of a data frame and pastes genus & species together
+#notes from class when we reviewed this: use 1:i instead of seq_len
+#surveys %>% mutate(genusspecies = lapply(
+#1:nrow(surveys), function(i){
+#paste0(surveys$genus[i], " ", surveys$species[i])
+#}))
 
 surveys$LatinName <- latin_name(surveys)
 #made a new column called LatinName that is filled with information from the latin_name function
